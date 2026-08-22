@@ -23,7 +23,7 @@ jobs:
           repository: deskflow/deskflow
           submodules: recursive
 
-      - name: Install deps (exact match to Pi)
+      - name: Install deps (exact match to Pi + Wayland plugin)
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
@@ -34,15 +34,10 @@ jobs:
             libsystemd-dev libcurl4-openssl-dev libavahi-compat-libdnssd-dev \
             libxkbregistry-dev libei-dev libeis-dev libportal-dev \
             libxkbfile-dev x11proto-kb-dev \
-            qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev
-          echo '--- X11 extensions dir ---'
-          ls -la /usr/include/X11/extensions 2>/dev/null || true
-          echo '--- XKBrules search ---'
-          find /usr -name XKBrules.h 2>/dev/null || true
-          echo '--- libxkbfile-dev files ---'
-          dpkg -L libxkbfile-dev 2>/dev/null | grep -i xkb || true
+            qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev \
+            qt6-wayland
 
-      - name: Configure (Wayland-first: disable X11 to avoid XKBrules.h)
+      - name: Configure (Wayland-first)
         run: |
           cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_X11_SUPPORT=OFF -DBUILD_INSTALLER=OFF
 
