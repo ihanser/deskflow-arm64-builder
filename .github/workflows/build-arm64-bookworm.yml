@@ -34,7 +34,6 @@ jobs:
             libxrandr-dev libxrender-dev libxcursor-dev libxtst-dev \
             libxinerama-dev libxkbcommon-dev libwayland-dev libudev-dev \
             libsystemd-dev libcurl4-openssl-dev libavahi-compat-libdnssd-dev \
-            libxkbregistry-dev libei-dev libeis-dev libportal-dev \
             libxkbfile-dev x11proto-kb-dev \
             qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev \
             qt6-wayland
