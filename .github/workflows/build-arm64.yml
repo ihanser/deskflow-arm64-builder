@@ -11,16 +11,16 @@ jobs:
     container:
       image: debian:trixie-slim
       options: --platform linux/arm64
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
-      - name: Install git in container
+      - name: Install git and CA certs in container
         run: |
-          apt-get update && apt-get install -y --no-install-recommends git
+          apt-get update && apt-get install -y --no-install-recommends git ca-certificates
 
       - uses: actions/checkout@v4
         with:
-          submodules: recursive
           repository: deskflow/deskflow
+          submodules: recursive
 
       - name: Install deps (exact match to Pi)
         run: |
