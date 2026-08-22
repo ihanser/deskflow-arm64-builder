@@ -13,9 +13,10 @@ jobs:
       options: --platform linux/arm64
     timeout-minutes: 180
     steps:
-      - name: Install git and CA certs in container
+      - name: Install git, CA certs, and build tools in container
         run: |
-          apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+          apt-get update && apt-get install -y --no-install-recommends \
+            git ca-certificates build-essential
 
       - uses: actions/checkout@v4
         with:
