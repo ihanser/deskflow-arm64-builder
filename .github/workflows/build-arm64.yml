@@ -35,10 +35,16 @@ jobs:
             libxkbregistry-dev libei-dev libeis-dev libportal-dev \
             libxkbfile-dev x11proto-kb-dev \
             qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev
+          echo '--- X11 extensions dir ---'
+          ls -la /usr/include/X11/extensions 2>/dev/null || true
+          echo '--- XKBrules search ---'
+          find /usr -name XKBrules.h 2>/dev/null || true
+          echo '--- libxkbfile-dev files ---'
+          dpkg -L libxkbfile-dev 2>/dev/null | grep -i xkb || true
 
-      - name: Configure
+      - name: Configure (Wayland-first: disable X11 to avoid XKBrules.h)
         run: |
-          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_X11_SUPPORT=ON -DBUILD_INSTALLER=OFF
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_X11_SUPPORT=OFF -DBUILD_INSTALLER=OFF
 
       - name: Build
         run: cmake --build build -j$(nproc)
