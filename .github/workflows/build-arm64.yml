@@ -33,7 +33,7 @@ jobs:
             libxinerama-dev libxkbcommon-dev libwayland-dev libudev-dev \
             libsystemd-dev libcurl4-openssl-dev libavahi-compat-libdnssd-dev \
             libxkbregistry-dev libei-dev libeis-dev libportal-dev \
-            x11proto-kb-dev \
+            libxkbfile-dev x11proto-kb-dev \
             qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev
 
       - name: Configure
