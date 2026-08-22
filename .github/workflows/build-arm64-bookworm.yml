@@ -1,0 +1,60 @@
+name: Build Deskflow ARM64 Bookworm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-arm64-bookworm.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    container:
+      image: debian:bookworm-slim
+      options: --platform linux/arm64
+    timeout-minutes: 180
+    steps:
+      - name: Install git, CA certs, and build tools in container
+        run: |
+          apt-get update && apt-get install -y --no-install-recommends \
+            git ca-certificates build-essential
+
+      - uses: actions/checkout@v4
+        with:
+          repository: deskflow/deskflow
+          submodules: recursive
+
+      - name: Install deps (match Pi OS + Wayland plugin)
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            cmake ninja-build pkg-config \
+            libssl-dev libx11-dev libxext-dev libxfixes-dev libxi-dev \
+            libxrandr-dev libxrender-dev libxcursor-dev libxtst-dev \
+            libxinerama-dev libxkbcommon-dev libwayland-dev libudev-dev \
+            libsystemd-dev libcurl4-openssl-dev libavahi-compat-libdnssd-dev \
+            libxkbregistry-dev libei-dev libeis-dev libportal-dev \
+            libxkbfile-dev x11proto-kb-dev \
+            qt6-base-dev qt6-base-dev-tools qt6-5compat-dev qt6-tools-dev \
+            qt6-wayland
+
+      - name: Configure (Wayland-first)
+        run: |
+          cmake -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_X11_SUPPORT=OFF -DBUILD_INSTALLER=OFF
+
+      - name: Build
+        run: cmake --build build -j$(nproc)
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          find build -maxdepth 3 -type f -executable -name "deskflow*" | xargs -I{} cp {} dist/ 2>/dev/null || true
+          ls -la dist/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deskflow-arm64-bookworm
+          path: dist/
+          retention-days: 7
